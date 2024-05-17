@@ -5,7 +5,6 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.sotnikov.ListToDoBackend.models.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.codecrafters.AuthorizationTatarBuAPI.models.User;
@@ -29,7 +28,14 @@ public class JWTUtil {
 
         return JWT.create()
                 .withSubject(subject)
+                .withClaim("id", user.getId().toString())
+                .withClaim("name", user.getName())
                 .withClaim("login", user.getLogin())
+                .withClaim("role", user.getRole().getName())
+                .withClaim("avatar", user.getAvatar())
+                .withClaim("birth_date", user.getBirthDate())
+                .withClaim("registered_at", user.getLogin())
+                .withClaim("last_activity_at", user.getLogin())
                 .withIssuer(issuer)
                 .withExpiresAt(expirationDate)
                 .sign(Algorithm.HMAC256(secretWord));

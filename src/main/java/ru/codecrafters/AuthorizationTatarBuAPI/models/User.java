@@ -39,6 +39,9 @@ public class User {//TODO
     @Column(name="avatar")
     private Integer avatar;
 
+    @Column(name = "birth_date")
+    private LocalDateTime birthDate;
+
     @Column(name = "registered_at")
     private LocalDateTime registeredAt;
 

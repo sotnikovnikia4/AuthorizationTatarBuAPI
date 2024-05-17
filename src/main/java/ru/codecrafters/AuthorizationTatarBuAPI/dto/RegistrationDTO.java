@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrationDTO {//TODO
+public class RegistrationDTO {
 
     @JsonProperty("name")
     private String name;
@@ -29,5 +29,8 @@ public class RegistrationDTO {//TODO
 
     @JsonProperty("avatar")
     private Integer avatar;
+
+    @JsonProperty("birth_date")
+    private LocalDateTime birthDate;
 }
 

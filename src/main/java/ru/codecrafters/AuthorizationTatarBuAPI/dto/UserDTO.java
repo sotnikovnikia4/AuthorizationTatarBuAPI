@@ -1,5 +1,6 @@
 package ru.codecrafters.AuthorizationTatarBuAPI.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,25 +19,20 @@ public class UserDTO {
 
     private UUID id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "login")
     private String login;
 
-    @Column(name = "password")
-    private String password;
+    private RoleDTO role;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-    private Role role;
-
-    @Column(name="avatar")
     private Integer avatar;
 
-    @Column(name = "registered_at")
+    @JsonProperty("birth_date")
+    private LocalDateTime birthDate;
+
+    @JsonProperty("registered_at")
     private LocalDateTime registeredAt;
 
-    @Column(name = "last_activity_at")
+    @JsonProperty("last_activity_at")
     private LocalDateTime lastActivityAt;
 }
