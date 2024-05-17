@@ -1,14 +1,13 @@
 package ru.codecrafters.AuthorizationTatarBuAPI.dto;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,21 +15,19 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RegistrationDTO {//TODO
 
-    private UUID id;
-
-    @Column(name = "login")
-    @NotBlank
-    private String login;
-
-    @Column(name = "password")
-    @NotBlank
-    private String password;
-
-    @Column(name = "name")
-    @NotBlank
+    @JsonProperty("name")
     private String name;
 
-    @Column(name = "registered_at")
-    private LocalDateTime registeredAt;
+    @JsonProperty("login")
+    private String login;
+
+    @JsonProperty("password")
+    private String password;
+
+    @JsonProperty("role")
+    private RoleDTO role;
+
+    @JsonProperty("avatar")
+    private Integer avatar;
 }
 
