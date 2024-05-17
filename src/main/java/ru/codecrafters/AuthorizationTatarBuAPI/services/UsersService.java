@@ -1,12 +1,12 @@
 package ru.codecrafters.AuthorizationTatarBuAPI.services;
 
-import com.sotnikov.ListToDoBackend.exceptions.UserDataNotChangedException;
-import com.sotnikov.ListToDoBackend.models.User;
-import com.sotnikov.ListToDoBackend.repotitories.TasksRepository;
-import com.sotnikov.ListToDoBackend.repotitories.UsersRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.codecrafters.AuthorizationTatarBuAPI.exceptions.UserDataNotChangedException;
+import ru.codecrafters.AuthorizationTatarBuAPI.models.User;
+import ru.codecrafters.AuthorizationTatarBuAPI.repotitories.UsersRepository;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,7 +16,6 @@ import java.util.UUID;
 //@Transactional(readOnly = true)
 public class UsersService {
     private final UsersRepository usersRepository;
-    private final TasksRepository tasksRepository;
 
     public Optional<User> findOne(String login){
         return usersRepository.findByLogin(login);
@@ -38,7 +37,6 @@ public class UsersService {
 
     @Transactional
     public void delete(User user){
-        tasksRepository.deleteAllByUserId(user.getId());
 
         usersRepository.delete(user);
     }

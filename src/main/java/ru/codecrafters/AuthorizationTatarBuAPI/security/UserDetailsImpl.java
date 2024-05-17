@@ -1,14 +1,14 @@
 package ru.codecrafters.AuthorizationTatarBuAPI.security;
 
-import com.sotnikov.ListToDoBackend.models.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.codecrafters.AuthorizationTatarBuAPI.models.User;
 
 import java.util.Collection;
 import java.util.Collections;
 
-public class UserDetailsImpl implements UserDetails {
+public class UserDetailsImpl implements UserDetails {//TODO
 
     @Getter
     private final User user;

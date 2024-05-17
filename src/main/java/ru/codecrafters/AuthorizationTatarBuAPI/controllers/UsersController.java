@@ -1,11 +1,5 @@
 package ru.codecrafters.AuthorizationTatarBuAPI.controllers;
 
-import com.sotnikov.ListToDoBackend.dto.UserDTO;
-import com.sotnikov.ListToDoBackend.exceptions.UserDataNotChangedException;
-import com.sotnikov.ListToDoBackend.models.User;
-import com.sotnikov.ListToDoBackend.security.UserDetailsImpl;
-import com.sotnikov.ListToDoBackend.services.UsersService;
-import com.sotnikov.ListToDoBackend.util.EditUserValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -15,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.codecrafters.AuthorizationTatarBuAPI.services.UsersService;
+import ru.codecrafters.AuthorizationTatarBuAPI.util.EditUserValidator;
 
 @RestController
 @RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)

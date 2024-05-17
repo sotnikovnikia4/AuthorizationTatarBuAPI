@@ -1,14 +1,14 @@
 package ru.codecrafters.AuthorizationTatarBuAPI.services;
 
-import com.sotnikov.ListToDoBackend.models.User;
-import com.sotnikov.ListToDoBackend.repotitories.UsersRepository;
-import com.sotnikov.ListToDoBackend.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.codecrafters.AuthorizationTatarBuAPI.models.User;
+import ru.codecrafters.AuthorizationTatarBuAPI.repotitories.UsersRepository;
+import ru.codecrafters.AuthorizationTatarBuAPI.security.UserDetailsImpl;
 
 import java.util.Optional;
 

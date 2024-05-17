@@ -1,14 +1,6 @@
 package ru.codecrafters.AuthorizationTatarBuAPI.controllers;
 
-import com.sotnikov.ListToDoBackend.dto.AuthenticationDTO;
-import com.sotnikov.ListToDoBackend.dto.UserDTO;
-import com.sotnikov.ListToDoBackend.exceptions.NotRegisteredException;
-import com.sotnikov.ListToDoBackend.models.User;
-import com.sotnikov.ListToDoBackend.security.AuthManagerImpl;
-import com.sotnikov.ListToDoBackend.security.JWTUtil;
-import com.sotnikov.ListToDoBackend.security.UserDetailsImpl;
-import com.sotnikov.ListToDoBackend.services.RegistrationService;
-import com.sotnikov.ListToDoBackend.util.RegistrationValidator;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,6 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.codecrafters.AuthorizationTatarBuAPI.dto.AuthenticationDTO;
+import ru.codecrafters.AuthorizationTatarBuAPI.dto.RegistrationDTO;
+import ru.codecrafters.AuthorizationTatarBuAPI.exceptions.NotRegisteredException;
+import ru.codecrafters.AuthorizationTatarBuAPI.models.User;
+import ru.codecrafters.AuthorizationTatarBuAPI.security.AuthManagerImpl;
+import ru.codecrafters.AuthorizationTatarBuAPI.security.JWTUtil;
+import ru.codecrafters.AuthorizationTatarBuAPI.security.UserDetailsImpl;
+import ru.codecrafters.AuthorizationTatarBuAPI.services.RegistrationService;
+import ru.codecrafters.AuthorizationTatarBuAPI.util.ErrorMessageMaker;
+import ru.codecrafters.AuthorizationTatarBuAPI.util.RegistrationValidator;
 
 import java.util.Map;
 
@@ -39,14 +41,14 @@ public class AuthController {
     private final ModelMapper modelMapper;
 
     @PostMapping("/registration")
-    public ResponseEntity<Map<String,Object>> register(@RequestBody @Valid UserDTO userDTO,
+    public ResponseEntity<Map<String,Object>> register(@RequestBody @Valid RegistrationDTO registrationDTO,
                                                        BindingResult bindingResult){
 
-        User user = convertToUser(userDTO);
+        User user = convertToUser(registrationDTO);
         registrationValidator.validate(user, bindingResult);
 
         if(bindingResult.hasErrors()){
-            throw new NotRegisteredException("User is not registered, invalid data");
+            throw new NotRegisteredException(ErrorMessageMaker.formErrorMessage(bindingResult));
         }
 
         registrationService.register(user);
@@ -74,7 +76,7 @@ public class AuthController {
         return new ResponseEntity<>(Map.of("token", token), HttpStatus.OK);
     }
 
-    private User convertToUser(UserDTO userDTO){
-        return modelMapper.map(userDTO, User.class);
+    private User convertToUser(RegistrationDTO registrationDTO){
+        return modelMapper.map(registrationDTO, User.class);
     }
 }

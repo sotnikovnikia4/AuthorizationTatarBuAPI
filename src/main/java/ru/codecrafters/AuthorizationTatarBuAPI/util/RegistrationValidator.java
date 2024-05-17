@@ -1,11 +1,11 @@
 package ru.codecrafters.AuthorizationTatarBuAPI.util;
 
-import com.sotnikov.ListToDoBackend.models.User;
-import com.sotnikov.ListToDoBackend.services.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import ru.codecrafters.AuthorizationTatarBuAPI.models.User;
+import ru.codecrafters.AuthorizationTatarBuAPI.services.UsersService;
 
 import java.util.Optional;
 

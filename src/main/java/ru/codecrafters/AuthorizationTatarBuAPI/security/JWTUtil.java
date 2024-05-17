@@ -8,6 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.sotnikov.ListToDoBackend.models.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import ru.codecrafters.AuthorizationTatarBuAPI.models.User;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -23,7 +24,7 @@ public class JWTUtil {
     private int expirationDays;
     private final String subject = "User details";
 
-    public String generateToken(User user){
+    public String generateToken(User user){//TODO
         Date expirationDate = Date.from(ZonedDateTime.now().plusDays(expirationDays).toInstant());
 
         return JWT.create()
@@ -34,7 +35,7 @@ public class JWTUtil {
                 .sign(Algorithm.HMAC256(secretWord));
     }
 
-    public String validateTokenAndRetrieveClaim(String token) throws JWTVerificationException {
+    public String validateTokenAndRetrieveClaim(String token) throws JWTVerificationException {//TODO
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretWord))
                 .withSubject(subject)
                 .withIssuer(issuer)

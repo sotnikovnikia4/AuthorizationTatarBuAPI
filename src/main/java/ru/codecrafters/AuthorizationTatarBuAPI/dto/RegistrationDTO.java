@@ -1,4 +1,4 @@
-package ru.codecrafters.AuthorizationTatarBuAPI.models;
+package ru.codecrafters.AuthorizationTatarBuAPI.dto;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -10,17 +10,12 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Table(name = "users")
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {//TODO
+public class RegistrationDTO {//TODO
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "user_id")
     private UUID id;
 
     @Column(name = "login")
@@ -38,3 +33,4 @@ public class User {//TODO
     @Column(name = "registered_at")
     private LocalDateTime registeredAt;
 }
+
