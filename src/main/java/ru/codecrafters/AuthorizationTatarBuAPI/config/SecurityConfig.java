@@ -36,6 +36,9 @@ public class SecurityConfig{//TODO
                                 .requestMatchers(
                                         "/users/**"
                                 ).authenticated()
+                                .requestMatchers(
+                                        "/classrooms/**"
+                                ).hasAuthority("TEACHER")
                                 .anyRequest().permitAll()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)

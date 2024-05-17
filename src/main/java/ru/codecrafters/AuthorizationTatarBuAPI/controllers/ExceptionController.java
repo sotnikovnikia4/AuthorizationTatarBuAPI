@@ -7,6 +7,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.codecrafters.AuthorizationTatarBuAPI.exceptions.ClassroomException;
 import ru.codecrafters.AuthorizationTatarBuAPI.exceptions.NotRegisteredException;
 import ru.codecrafters.AuthorizationTatarBuAPI.exceptions.UserDataNotChangedException;
 import ru.codecrafters.AuthorizationTatarBuAPI.util.ExceptionMessage;
@@ -56,5 +57,14 @@ public class ExceptionController {
                 new Date()
         );
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(ClassroomException.class)
+    public ResponseEntity<ExceptionMessage> handleException(ClassroomException e){
+        ExceptionMessage response = new ExceptionMessage(
+                e.getMessage(),
+                new Date()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

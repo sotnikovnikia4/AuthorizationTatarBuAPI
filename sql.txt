@@ -17,6 +17,22 @@ create table users(
     check ( gender = 'male' or gender = 'female' )
 );
 
+create table ClassRooms(
+    classroom_id uuid PRIMARY KEY,
+    name varchar(255),
+    head uuid REFERENCES users (user_id) on delete SET NULL
+);
+
+create table ClassRooms_Users(
+    classroom_id uuid references ClassRooms(classroom_id) on delete cascade,
+    user_id uuid references users(user_id) on delete cascade,
+    PRIMARY KEY (classroom_id, user_id)
+)
+
 insert into roles (name) values ('PUPIL');
 insert into roles (name) values ('TEACHER');
 insert into roles (name) values ('EDITOR');
+
+insert into users
+    (user_id, name, login, password, role_id, avatar, gender, birth_date, registered_at, last_activity_at)
+values (gen_random_uuid(), 'SYSTEM_BOT', 'SYSTEM_BOT', 'SYSTEM_BOT', 3, null,  'male', now(), now(), now());
