@@ -2,15 +2,16 @@ package ru.codecrafters.AuthorizationTatarBuAPI.security;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.codecrafters.AuthorizationTatarBuAPI.models.User;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
-public class UserDetailsImpl implements UserDetails {//TODO
+@Getter
+public class UserDetailsImpl implements UserDetails {
 
-    @Getter
     private final User user;
 
     public UserDetailsImpl(User user){
@@ -19,7 +20,7 @@ public class UserDetailsImpl implements UserDetails {//TODO
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return List.of(new SimpleGrantedAuthority(user.getRole().getName()));
     }
 
     @Override

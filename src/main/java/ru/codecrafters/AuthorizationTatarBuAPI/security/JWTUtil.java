@@ -23,7 +23,7 @@ public class JWTUtil {
     private int expirationDays;
     private final String subject = "User details";
 
-    public String generateToken(User user){//TODO
+    public String generateToken(User user){
         Date expirationDate = Date.from(ZonedDateTime.now().plusDays(expirationDays).toInstant());
 
         return JWT.create()
@@ -33,15 +33,16 @@ public class JWTUtil {
                 .withClaim("login", user.getLogin())
                 .withClaim("role", user.getRole().getName())
                 .withClaim("avatar", user.getAvatar())
-                .withClaim("birth_date", user.getBirthDate())
-                .withClaim("registered_at", user.getLogin())
-                .withClaim("last_activity_at", user.getLogin())
+                .withClaim("gender", user.getGender())
+                .withClaim("birth_date", user.getBirthDate() == null ? null: user.getBirthDate().toString())
+                .withClaim("registered_at", user.getRegisteredAt().toString())
+                .withClaim("last_activity_at", user.getLastActivityAt().toString())
                 .withIssuer(issuer)
                 .withExpiresAt(expirationDate)
                 .sign(Algorithm.HMAC256(secretWord));
     }
 
-    public String validateTokenAndRetrieveClaim(String token) throws JWTVerificationException {//TODO
+    public String validateTokenAndRetrieveClaim(String token) throws JWTVerificationException {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretWord))
                 .withSubject(subject)
                 .withIssuer(issuer)

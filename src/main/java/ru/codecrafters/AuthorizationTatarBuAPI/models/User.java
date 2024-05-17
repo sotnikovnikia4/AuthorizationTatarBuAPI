@@ -16,7 +16,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {//TODO
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -38,6 +38,9 @@ public class User {//TODO
 
     @Column(name="avatar")
     private Integer avatar;
+
+    @Column(name="gender")
+    private String gender;
 
     @Column(name = "birth_date")
     private LocalDateTime birthDate;

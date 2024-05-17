@@ -27,6 +27,8 @@ public class UserDTO {
 
     private Integer avatar;
 
+    private String gender;
+
     @JsonProperty("birth_date")
     private LocalDateTime birthDate;
 

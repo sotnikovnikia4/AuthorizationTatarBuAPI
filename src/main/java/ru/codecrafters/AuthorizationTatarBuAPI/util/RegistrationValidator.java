@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.codecrafters.AuthorizationTatarBuAPI.models.User;
+import ru.codecrafters.AuthorizationTatarBuAPI.services.RegistrationService;
 import ru.codecrafters.AuthorizationTatarBuAPI.services.UsersService;
 
 import java.util.Optional;
@@ -13,6 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RegistrationValidator implements Validator {
     private final UsersService usersService;
+    private final RegistrationService registrationService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -20,7 +22,7 @@ public class RegistrationValidator implements Validator {
     }
 
     @Override
-    public void validate(Object target, Errors errors) {//TODO
+    public void validate(Object target, Errors errors) {
         User userToCheck = (User)target;
         Optional<User> userWithSameLogin = usersService.findOne(userToCheck.getLogin());
 
