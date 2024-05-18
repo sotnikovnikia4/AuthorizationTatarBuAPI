@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -51,6 +52,9 @@ public class User {
 
     @Column(name = "last_activity_at")
     private LocalDateTime lastActivityAt;
+
+    @ManyToMany(mappedBy = "students")
+    private List<Classroom> classrooms;
 
     @Override
     public boolean equals(Object o) {

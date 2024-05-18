@@ -164,4 +164,14 @@ public class ClassroomsService {
                 () -> new ClassroomException("Студента нет в списке группы")
         );
     }
+
+    @Transactional
+    public List<Classroom> getClassroomsByStudentId(UUID studentId) {
+        Optional<User> student = usersRepository.findById(studentId);
+        if(student.isEmpty()){
+            throw new ClassroomException("Не существует такого пользователя");
+        }
+
+        return student.get().getClassrooms();
+    }
 }

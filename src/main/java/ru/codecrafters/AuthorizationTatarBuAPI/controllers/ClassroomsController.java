@@ -134,6 +134,17 @@ public class ClassroomsController {
         return "Учитель должен добавить вас по логину, обратитесь к учителю";
     }
 
+    @GetMapping("/student/{studentId}/get-classrooms")
+    public ResponseEntity<List<ClassroomDTO>> classroomDTOS (@PathVariable UUID studentId){
+
+        List<Classroom> classrooms = classroomsService.getClassroomsByStudentId(studentId);
+
+        return new ResponseEntity<>(
+                classrooms.stream().map(this::convertToClassroomDTO).collect(Collectors.toList()),
+                HttpStatus.OK
+        );
+    }
+
     private ClassroomDTO convertToClassroomDTO(Classroom classroom){
         return modelMapper.map(classroom, ClassroomDTO.class);
     }
