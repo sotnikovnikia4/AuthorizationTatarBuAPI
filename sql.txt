@@ -20,7 +20,7 @@ create table users(
 create table ClassRooms(
     classroom_id uuid PRIMARY KEY,
     name varchar(255),
-    head uuid REFERENCES users (user_id) on delete SET NULL
+    teacher uuid REFERENCES users (user_id) on delete SET NULL
 );
 
 create table ClassRooms_Users(

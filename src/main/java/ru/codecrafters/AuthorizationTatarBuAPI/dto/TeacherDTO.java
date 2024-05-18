@@ -1,25 +1,22 @@
 package ru.codecrafters.AuthorizationTatarBuAPI.dto;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.codecrafters.AuthorizationTatarBuAPI.models.User;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClassroomDTO {
+public class TeacherDTO {
     private UUID id;
 
     private String name;
 
-    private TeacherDTO teacher;
-
-    private List<UserDTO> students;
+    private Integer avatar;
 }

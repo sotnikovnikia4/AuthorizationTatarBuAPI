@@ -26,8 +26,8 @@ public class Classroom {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "head", referencedColumnName = "user_id")
-    private User head;
+    @JoinColumn(name = "teacher", referencedColumnName = "user_id")
+    private User teacher;
 
     @ManyToMany
     @JoinTable(
