@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -125,6 +126,12 @@ public class ClassroomsController {
         User user = ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 
         classroomsService.addStudentToRandomGroup(user);
+    }
+
+    @GetMapping("/ask-join-group")
+    @ResponseStatus(HttpStatus.OK)
+    public String askJoinGroup(){
+        return "Учитель должен добавить вас по логину, обратитесь к учителю";
     }
 
     private ClassroomDTO convertToClassroomDTO(Classroom classroom){

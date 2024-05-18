@@ -1,6 +1,8 @@
 package ru.codecrafters.AuthorizationTatarBuAPI.services;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,15 +13,23 @@ import ru.codecrafters.AuthorizationTatarBuAPI.repotitories.ClassroomsRepository
 import ru.codecrafters.AuthorizationTatarBuAPI.repotitories.UsersRepository;
 import ru.codecrafters.AuthorizationTatarBuAPI.security.UserDetailsImpl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ClassroomsService {
+    private static final int MAX_COUNT_STUDENTS = 30;
+
     private final ClassroomsRepository classroomsRepository;
     private final UsersRepository usersRepository;
+    private User systemBot;
+    private final Random random;
+
+    @PostConstruct
+    public void configure(){
+        systemBot = usersRepository.findByLogin("SYSTEM_BOT").orElse(null);
+    }
 
     public Classroom createByName(String name){
         Classroom classroom = new Classroom();
@@ -27,6 +37,7 @@ public class ClassroomsService {
         classroom.setTeacher(((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser());
 
         classroomsRepository.save(classroom);
+        classroom.setStudents(new ArrayList<>());
 
         return classroom;
     }
@@ -77,6 +88,7 @@ public class ClassroomsService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('PUPIL')")
     public void addStudentToClassroom(UUID classroomId, String studentLogin) {
         User teacher = ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Optional<Classroom> classroom = classroomsRepository.findById(classroomId);
@@ -85,9 +97,6 @@ public class ClassroomsService {
         Optional<User> student = usersRepository.findByLogin(studentLogin);
         if(student.isEmpty()){
             throw  new ClassroomException("Студента с таким логином нет");
-        }
-        if(!student.get().getRole().getName().equals("PUPIL")){
-            throw  new ClassroomException("У студента должна быть роль PUPIL");
         }
 
         checkIfStudentIsNotInGroupOtherwiseThrowException(classroom.get(), student.get());
@@ -112,6 +121,7 @@ public class ClassroomsService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('PUPIL')")
     public void quitFromClassroom(UUID classroomId, User student) {
         Optional<Classroom> classroom = classroomsRepository.findById(classroomId);
 
@@ -124,12 +134,27 @@ public class ClassroomsService {
         classroom.get().getStudents().remove(student);
     }
 
+    @Transactional
+    @PreAuthorize("hasRole('PUPIL')")
     public void addStudentToRandomGroup(User student){
-        List<Classroom> systemClassrooms = 
+        List<Classroom> systemClassrooms = classroomsRepository.findAllByTeacher(systemBot);
+        systemClassrooms = systemClassrooms
+                .stream().filter(classroom -> classroom.getStudents().size() < MAX_COUNT_STUDENTS)
+                .collect(Collectors.toList());
+
+        Classroom classroom;
+        if(systemClassrooms.isEmpty()){
+            classroom = createByName("куянчики");
+        }
+        else{
+            int randomIndex = random.nextInt(0, systemClassrooms.size());
+            classroom = systemClassrooms.get(randomIndex);
+        }
+        classroom.getStudents().add(student);
     }
 
     private void checkIfStudentIsNotInGroupOtherwiseThrowException(Classroom classroom, User student) throws ClassroomException{
-        if(classroom.getStudents().stream().filter(s -> s.getId().equals(student.getId())).findAny().isPresent()){
+        if(classroom.getStudents().stream().anyMatch(s -> s.getId().equals(student.getId()))){
             throw new ClassroomException("Студент уже есть в списке группы");
         }
     }

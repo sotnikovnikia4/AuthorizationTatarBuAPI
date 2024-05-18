@@ -29,9 +29,9 @@ create table ClassRooms_Users(
     PRIMARY KEY (classroom_id, user_id)
 )
 
-insert into roles (name) values ('PUPIL');
-insert into roles (name) values ('TEACHER');
-insert into roles (name) values ('EDITOR');
+insert into roles (name) values ('ROLE_PUPIL');
+insert into roles (name) values ('ROLE_TEACHER');
+insert into roles (name) values ('ROLE_EDITOR');
 
 insert into users
     (user_id, name, login, password, role_id, avatar, gender, birth_date, registered_at, last_activity_at)
