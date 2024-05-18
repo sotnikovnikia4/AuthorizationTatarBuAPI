@@ -11,5 +11,5 @@ import java.util.UUID;
 
 @Repository
 public interface ClassroomsRepository extends JpaRepository<Classroom, UUID> {
-    List<Classroom> findAllByTeacher(User head);
+    List<Classroom> findAllByTeacher(User teacher);
 }

@@ -22,7 +22,7 @@ public class UsersService {
     }
 
     @Transactional
-    public void update(User updatedUser, UUID id){
+    public void update(User updatedUser, UUID id){//TODO
         Optional<User> userToUpdate = usersRepository.findById(id);
 
         if(userToUpdate.isPresent()){
@@ -36,8 +36,7 @@ public class UsersService {
     }
 
     @Transactional
-    public void delete(User user){
-
+    public void delete(User user){//TODO
         usersRepository.delete(user);
     }
 }

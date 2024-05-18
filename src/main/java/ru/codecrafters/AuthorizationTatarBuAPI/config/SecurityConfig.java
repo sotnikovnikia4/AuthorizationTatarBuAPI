@@ -37,6 +37,9 @@ public class SecurityConfig{//TODO
                                         "/users/**"
                                 ).authenticated()
                                 .requestMatchers(
+                                        "/classrooms/quit"
+                                ).hasAuthority("PUPIL")
+                                .requestMatchers(
                                         "/classrooms/**"
                                 ).hasAuthority("TEACHER")
                                 .anyRequest().permitAll()

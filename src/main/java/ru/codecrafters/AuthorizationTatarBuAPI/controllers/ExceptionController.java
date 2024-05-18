@@ -1,6 +1,7 @@
 package ru.codecrafters.AuthorizationTatarBuAPI.controllers;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -61,6 +62,15 @@ public class ExceptionController {
 
     @ExceptionHandler(ClassroomException.class)
     public ResponseEntity<ExceptionMessage> handleException(ClassroomException e){
+        ExceptionMessage response = new ExceptionMessage(
+                e.getMessage(),
+                new Date()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    public ResponseEntity<ExceptionMessage> handleException(JsonProcessingException e){
         ExceptionMessage response = new ExceptionMessage(
                 e.getMessage(),
                 new Date()

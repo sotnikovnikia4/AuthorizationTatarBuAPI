@@ -3,9 +3,12 @@ package ru.codecrafters.AuthorizationTatarBuAPI.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.codecrafters.AuthorizationTatarBuAPI.exceptions.ClassroomException;
 import ru.codecrafters.AuthorizationTatarBuAPI.models.Classroom;
 import ru.codecrafters.AuthorizationTatarBuAPI.models.User;
 import ru.codecrafters.AuthorizationTatarBuAPI.repotitories.ClassroomsRepository;
+import ru.codecrafters.AuthorizationTatarBuAPI.repotitories.UsersRepository;
 import ru.codecrafters.AuthorizationTatarBuAPI.security.UserDetailsImpl;
 
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ClassroomsService {
     private final ClassroomsRepository classroomsRepository;
+    private final UsersRepository usersRepository;
 
     public Classroom createByName(String name){
         Classroom classroom = new Classroom();
@@ -31,7 +35,84 @@ public class ClassroomsService {
         return classroomsRepository.findAllByTeacher(teacher);
     }
 
-    public Optional<Classroom> getByTeacherId(User teacher){
+    public void checkIfClassroomHasSuchTeacherOtherwiseThrowException(UUID classroomId, User teacher) throws ClassroomException {
+        Optional<Classroom> classroom = classroomsRepository.findById(classroomId);
+        if(classroom.isEmpty()){
+            throw new ClassroomException("Данного classroom не существует");
+        }
+        if(!classroom.get().getTeacher().getId().equals(teacher.getId())){
+            throw new ClassroomException("Этот classroom не принадлежит этому учителю");
+        }
+    }
 
+    public void checkIfClassroomHasSuchTeacherOtherwiseThrowException(Optional<Classroom> classroom, User teacher) throws ClassroomException {
+        if(classroom.isEmpty()){
+            throw new ClassroomException("Данного classroom не существует");
+        }
+        if(!classroom.get().getTeacher().getId().equals(teacher.getId())){
+            throw new ClassroomException("Этот classroom не принадлежит этому учителю");
+        }
+    }
+
+    public void deleteById(UUID classroomId){
+        classroomsRepository.deleteById(classroomId);
+    }
+
+    public void update(Classroom updatedClassroom){
+        Optional<Classroom> classroomToBeUpdated = classroomsRepository.findById(updatedClassroom.getId());
+        if(classroomToBeUpdated.isEmpty()){
+            throw new ClassroomException("Такого classroom не существует, обновления не произошло");
+        }
+
+        classroomToBeUpdated.get().setName(updatedClassroom.getName());
+    }
+
+    @Transactional
+    public void addStudentToClassroom(UUID classroomId, String studentLogin) {
+        User teacher = ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        Optional<Classroom> classroom = classroomsRepository.findById(classroomId);
+        checkIfClassroomHasSuchTeacherOtherwiseThrowException(classroom, teacher);
+
+        Optional<User> student = usersRepository.findByLogin(studentLogin);
+        if(student.isEmpty()){
+            throw  new ClassroomException("Студента с таким логином нет");
+        }
+
+        checkIfStudentIsNotInGroupOtherwiseThrowException(classroom.get(), student.get());
+
+        classroom.get().getStudents().add(student.get());
+    }
+
+    @Transactional
+    public void removeStudentFromClassroom(UUID classroomId, String studentLogin) {
+        User teacher = ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        Optional<Classroom> classroom = classroomsRepository.findById(classroomId);
+        checkIfClassroomHasSuchTeacherOtherwiseThrowException(classroom, teacher);
+
+        Optional<User> student = usersRepository.findByLogin(studentLogin);
+        if(student.isEmpty()){
+            throw  new ClassroomException("Студента с таким логином нет");
+        }
+
+        classroom.get().getStudents().remove(student.get());
+    }
+
+    @Transactional
+    public void quitFromClassroom(UUID classroomId, User student) {
+        Optional<Classroom> classroom = classroomsRepository.findById(classroomId);
+
+        if(classroom.isEmpty()){
+            throw new ClassroomException("Этого classroom не существует");
+        }
+
+        checkIfStudentIsNotInGroupOtherwiseThrowException(classroom.get(), student);
+
+        classroom.get().getStudents().remove(student);
+    }
+
+    private void checkIfStudentIsNotInGroupOtherwiseThrowException(Classroom classroom, User student) throws ClassroomException{
+        classroom.getStudents().stream().filter(s -> s.getId().equals(student.getId())).findAny().orElseThrow(
+                () -> new ClassroomException("Студента нет в списке группы")
+        );
     }
 }
