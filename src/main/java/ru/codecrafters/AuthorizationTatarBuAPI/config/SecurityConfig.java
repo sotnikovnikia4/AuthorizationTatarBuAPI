@@ -37,7 +37,8 @@ public class SecurityConfig{//TODO
                                         "/users/**"
                                 ).authenticated()
                                 .requestMatchers(
-                                        "/classrooms/quit"
+                                        "/classrooms/quit",
+                                        "/classrooms/enter-to-random-system-group"
                                 ).hasAuthority("PUPIL")
                                 .requestMatchers(
                                         "/classrooms/**"

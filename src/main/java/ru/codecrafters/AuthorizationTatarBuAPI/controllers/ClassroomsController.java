@@ -45,14 +45,26 @@ public class ClassroomsController {
         return new ResponseEntity<>(convertToClassroomDTO(createdClassroom), HttpStatus.CREATED);
     }
 
-    @GetMapping("/get")
-    public ResponseEntity<List<ClassroomDTO>> get(){
+    @GetMapping("/get-all")
+    public ResponseEntity<List<ClassroomDTO>> getAll(){
         User teacher = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 
         List<Classroom> classrooms = classroomsService.getClassroomsByTeacher(teacher);
 
         return new ResponseEntity<>(
                 classrooms.stream().map(this::convertToClassroomDTO).collect(Collectors.toList()),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/get-one")
+    public ResponseEntity<ClassroomDTO> get(@RequestParam(name = "classroom_id") UUID classroomId){
+        User teacher = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+
+        Classroom classroom = classroomsService.getClassroomByIdAndCheckTeacher(classroomId, teacher);
+
+        return new ResponseEntity<>(
+                convertToClassroomDTO(classroom),
                 HttpStatus.OK
         );
     }
@@ -83,15 +95,16 @@ public class ClassroomsController {
     }
 
     @PutMapping ("/add-student")
+    @ResponseStatus(HttpStatus.OK)
     public void addStudent(@RequestParam(name = "classroom_id") UUID classroomId,
                            @RequestParam(name = "student_login") String studentLogin
     ){
-
 
         classroomsService.addStudentToClassroom(classroomId, studentLogin);
     }
 
     @DeleteMapping("/remove-student")
+    @ResponseStatus(HttpStatus.OK)
     public void deleteStudent(@RequestParam(name = "classroom_id") UUID classroomId,
                            @RequestParam(name = "student_login") String studentLogin
     ){
@@ -100,10 +113,18 @@ public class ClassroomsController {
     }
 
     @DeleteMapping("/quit")
+    @ResponseStatus(HttpStatus.OK)
     public void quit(@RequestParam(name = "classroom_id") UUID classroomId){
         User student = ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 
         classroomsService.quitFromClassroom(classroomId, student);
+    }
+
+    @PutMapping("/enter-to-random-system-group")
+    public void enter(){
+        User user = ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+
+        classroomsService.addStudentToRandomGroup(user);
     }
 
     private ClassroomDTO convertToClassroomDTO(Classroom classroom){

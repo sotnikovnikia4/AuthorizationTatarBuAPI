@@ -35,6 +35,14 @@ public class ClassroomsService {
         return classroomsRepository.findAllByTeacher(teacher);
     }
 
+    public Classroom getClassroomByIdAndCheckTeacher(UUID classroomId, User teacher){
+        Optional<Classroom> classroom = classroomsRepository.findById(classroomId);
+
+        checkIfClassroomHasSuchTeacherOtherwiseThrowException(classroom, teacher);
+
+        return classroom.get();
+    }
+
     public void checkIfClassroomHasSuchTeacherOtherwiseThrowException(UUID classroomId, User teacher) throws ClassroomException {
         Optional<Classroom> classroom = classroomsRepository.findById(classroomId);
         if(classroom.isEmpty()){
@@ -58,6 +66,7 @@ public class ClassroomsService {
         classroomsRepository.deleteById(classroomId);
     }
 
+    @Transactional
     public void update(Classroom updatedClassroom){
         Optional<Classroom> classroomToBeUpdated = classroomsRepository.findById(updatedClassroom.getId());
         if(classroomToBeUpdated.isEmpty()){
@@ -77,6 +86,9 @@ public class ClassroomsService {
         if(student.isEmpty()){
             throw  new ClassroomException("Студента с таким логином нет");
         }
+        if(!student.get().getRole().getName().equals("PUPIL")){
+            throw  new ClassroomException("У студента должна быть роль PUPIL");
+        }
 
         checkIfStudentIsNotInGroupOtherwiseThrowException(classroom.get(), student.get());
 
@@ -94,6 +106,8 @@ public class ClassroomsService {
             throw  new ClassroomException("Студента с таким логином нет");
         }
 
+        checkIfStudentIsInGroupOtherwiseThrowException(classroom.get(), student.get());
+
         classroom.get().getStudents().remove(student.get());
     }
 
@@ -105,12 +119,22 @@ public class ClassroomsService {
             throw new ClassroomException("Этого classroom не существует");
         }
 
-        checkIfStudentIsNotInGroupOtherwiseThrowException(classroom.get(), student);
+        checkIfStudentIsInGroupOtherwiseThrowException(classroom.get(), student);
 
         classroom.get().getStudents().remove(student);
     }
 
+    public void addStudentToRandomGroup(User student){
+        List<Classroom> systemClassrooms = 
+    }
+
     private void checkIfStudentIsNotInGroupOtherwiseThrowException(Classroom classroom, User student) throws ClassroomException{
+        if(classroom.getStudents().stream().filter(s -> s.getId().equals(student.getId())).findAny().isPresent()){
+            throw new ClassroomException("Студент уже есть в списке группы");
+        }
+    }
+
+    private void checkIfStudentIsInGroupOtherwiseThrowException(Classroom classroom, User student) throws ClassroomException{
         classroom.getStudents().stream().filter(s -> s.getId().equals(student.getId())).findAny().orElseThrow(
                 () -> new ClassroomException("Студента нет в списке группы")
         );

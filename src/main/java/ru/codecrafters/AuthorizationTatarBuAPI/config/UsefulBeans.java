@@ -12,12 +12,4 @@ public class UsefulBeans {
     public ModelMapper modelMapper(){
         return new ModelMapper();
     }
-
-    @Bean
-    public ObjectMapper objectMapper(){
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules();
-
-        return objectMapper;
-    }
 }
