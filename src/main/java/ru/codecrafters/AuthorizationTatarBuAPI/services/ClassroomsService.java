@@ -88,7 +88,6 @@ public class ClassroomsService {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('PUPIL')")
     public void addStudentToClassroom(UUID classroomId, String studentLogin) {
         User teacher = ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Optional<Classroom> classroom = classroomsRepository.findById(classroomId);
