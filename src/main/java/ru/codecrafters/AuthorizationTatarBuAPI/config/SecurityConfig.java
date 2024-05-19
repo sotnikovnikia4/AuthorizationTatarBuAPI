@@ -34,7 +34,8 @@ public class SecurityConfig{//TODO
                         request.requestMatchers(
                                         "/auth/login",
                                         "/auth/registration",
-                                        "/error"
+                                        "/error",
+                                "/classrooms/student/*/get-classrooms"
                                 )
                                 .permitAll()
                                 .requestMatchers(

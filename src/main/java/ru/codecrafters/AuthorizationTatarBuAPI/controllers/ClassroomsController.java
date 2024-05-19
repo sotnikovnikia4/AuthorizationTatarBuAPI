@@ -136,6 +136,7 @@ public class ClassroomsController {
     }
 
     @GetMapping("/student/{studentId}/get-classrooms")
+    @PreAuthorize("isAnonymous()")
     public ResponseEntity<List<ClassroomDTO>> classroomDTOS (@PathVariable UUID studentId){
 
         List<Classroom> classrooms = classroomsService.getClassroomsByStudentId(studentId);
