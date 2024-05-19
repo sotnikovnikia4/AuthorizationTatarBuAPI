@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/classrooms")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class ClassroomsController {
     private final ClassroomsService classroomsService;
     private final ModelMapper modelMapper;

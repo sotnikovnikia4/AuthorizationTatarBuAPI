@@ -18,7 +18,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.Date;
 
 @RestControllerAdvice
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class ExceptionController {
     @ExceptionHandler(NotRegisteredException.class)
     public ResponseEntity<ExceptionMessage> handleException(NotRegisteredException e){
