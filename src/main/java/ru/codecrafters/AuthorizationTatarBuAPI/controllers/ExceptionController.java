@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.codecrafters.AuthorizationTatarBuAPI.exceptions.ClassroomException;
@@ -17,6 +18,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.Date;
 
 @RestControllerAdvice
+@CrossOrigin(origins = "http://localhost:3000")
 public class ExceptionController {
     @ExceptionHandler(NotRegisteredException.class)
     public ResponseEntity<ExceptionMessage> handleException(NotRegisteredException e){

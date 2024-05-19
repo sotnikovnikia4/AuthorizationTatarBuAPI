@@ -12,6 +12,7 @@ import ru.codecrafters.AuthorizationTatarBuAPI.services.UsersService;
 @RestController
 @RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class UsersController {
     private final UsersService usersService;
 
