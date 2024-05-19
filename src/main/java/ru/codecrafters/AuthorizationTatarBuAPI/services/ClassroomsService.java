@@ -165,6 +165,7 @@ public class ClassroomsService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('PUPIL')")
     public List<Classroom> getClassroomsByStudentId(UUID studentId) {
         Optional<User> student = usersRepository.findById(studentId);
         if(student.isEmpty()){
